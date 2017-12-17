@@ -3,8 +3,8 @@ import time
 
 start_time = int(round(time.time() * 1000))
 
-in_file = "D:/ROMs/MD/MD-16X/1.asm"
-out_file = "D:/ROMs/MD/MD-16X/1.MDR"
+in_file = "D:/ROMs/MD/MD-16G/1.asm"
+out_file = "D:/ROMs/MD/MD-16G/1.MDR"
 
 
 def reg(reg_id):
@@ -16,61 +16,61 @@ def reg(reg_id):
         return "00010"
     elif reg_id == "GP3":
         return "00011"
-    elif reg_id == "GP4":
-        return "00100"
-    elif reg_id == "GP5":
-        return "00101"
-    elif reg_id == "GP6":
-        return "00110"
-    elif reg_id == "GP7":
-        return "00111"
     elif reg_id == "ALU":
-        return "01000"
+        return "00100"
     elif reg_id == "ALF":
-        return "01001"
+        return "00101"
     elif reg_id == "AMC":
+        return "00110"
+    elif reg_id == "IOF":
+        return "00111"
+    elif reg_id == "CM0":
+        return "01000"
+    elif reg_id == "CM1":
+        return "01001"
+    elif reg_id == "CM2":
         return "01010"
-    elif reg_id == "FLG":
+    elif reg_id == "CM3":
         return "01011"
-    elif reg_id == "LMT":
+    elif reg_id == "":
         return "01100"
-    elif reg_id == "LFM":
+    elif reg_id == "":
         return "01101"
     elif reg_id == "CSP":
         return "01110"
     elif reg_id == "LSP":
         return "01111"
-    elif reg_id == "LT0":
+    elif reg_id == "CN0":
         return "10000"
-    elif reg_id == "LT1":
+    elif reg_id == "CN1":
         return "10001"
-    elif reg_id == "LT2":
+    elif reg_id == "CN2":
         return "10010"
-    elif reg_id == "LT3":
+    elif reg_id == "CN3":
         return "10011"
-    elif reg_id == "LT4":
+    elif reg_id == "CN4":
         return "10100"
-    elif reg_id == "LT5":
+    elif reg_id == "CN5":
         return "10101"
-    elif reg_id == "LT6":
+    elif reg_id == "CN6":
         return "10110"
-    elif reg_id == "LT7":
+    elif reg_id == "CN7":
         return "10111"
-    elif reg_id == "LT8":
+    elif reg_id == "CN8":
         return "11000"
-    elif reg_id == "LT9":
+    elif reg_id == "CN9":
         return "11001"
-    elif reg_id == "LTA":
+    elif reg_id == "CNA":
         return "11010"
-    elif reg_id == "LTB":
+    elif reg_id == "CNB":
         return "11011"
-    elif reg_id == "LTC":
+    elif reg_id == "CNC":
         return "11100"
-    elif reg_id == "LTD":
+    elif reg_id == "CND":
         return "11101"
-    elif reg_id == "LTE":
+    elif reg_id == "CNE":
         return "11110"
-    elif reg_id == "LTF":
+    elif reg_id == "CNF":
         return "11111"
     else:
         raise Exception('Unrecognised register: "' + reg_id + '" [' + str(line) + ']')
@@ -100,7 +100,7 @@ def force_add_hex(hex_d):
     bin_count += 1
 
 
-def add_jump(jump_hex, use_reg, goto_id):
+def add_jump(jump_hex, use_reg, goto_id):  # TODO
     global goto_list
     if goto_id not in goto_list:
         goto_list[goto_id] = '-1'
@@ -146,26 +146,26 @@ for x in content:
             add_hex("000010", data=format(int(reg_a, 16), '08b'))
         elif com == "LDU":  # Load half word, upper
             add_hex("000011", data=format(int(reg_a, 16), '08b'))
-        elif com == "EXO":  # Execute ROM
+        elif com == "STR":  # Store
             add_hex("000100")
-        elif com == "EXA":  # Execute RAM
+        elif com == "RET":  # Retrieve
             add_hex("000101")
         elif com == "JMP":  # Jump
             add_jump("001000", reg(reg_a), reg_b)
-        elif com == "JLZ":  # Jump if less than zero
-            add_jump("001001", reg(reg_a), reg_b)
-        elif com == "JGZ":  # Jump if greater than zero
-            add_jump("001010", reg(reg_a), reg_b)
-        elif com == "JEZ":  # Jump if zero
-            add_jump("001011", reg(reg_a), reg_b)
-        elif com == "JNZ":  # Jump if not zero
-            add_jump("001100", reg(reg_a), reg_b)
-        elif com == "JCS":  # Jump if carry set
-            add_jump("001101", reg(reg_a), reg_b)
-        elif com == "STR":  # Store
-            add_hex("001110", reg(reg_a), reg(reg_b))
-        elif com == "RET":  # Retrieve
-            add_hex("001111", reg(reg_a), reg(reg_b))
+        # elif com == "JLZ":  # Jump if less than zero
+        #    add_jump("001001", reg(reg_a), reg_b)
+        # elif com == "JGZ":  # Jump if greater than zero
+        #    add_jump("001010", reg(reg_a), reg_b)
+        # elif com == "JEZ":  # Jump if zero
+        #    add_jump("001011", reg(reg_a), reg_b) # TODO Add branching.
+        # elif com == "JNZ":  # Jump if not zero
+        #    add_jump("001100", reg(reg_a), reg_b)
+        # elif com == "JCS":  # Jump if carry set
+        #    add_jump("001101", reg(reg_a), reg_b)
+        # elif com == "STR":  # Store
+        #    add_hex("001110", reg(reg_a), reg(reg_b))
+        # elif com == "RET":  # Retrieve
+        #    add_hex("001111", reg(reg_a), reg(reg_b))
 
         elif com == "ADD":  # Add
             add_hex("010000", reg(reg_a), reg(reg_b))
@@ -173,8 +173,8 @@ for x in content:
             add_hex("010001", reg(reg_a), reg(reg_b))
         elif com == "MUL":  # Multiply
             add_hex("010010", reg(reg_a), reg(reg_b))
-        elif com == "CPY":  # Copy
-            add_hex("010011", reg(reg_a), reg(reg_b))
+        # elif com == "": Un-used
+        #    add_hex("010011", reg(reg_a), reg(reg_b))
         elif com == "SHL":  # Shift Left
             add_hex("010100", reg(reg_a))
         elif com == "SHR":  # Shift Right
@@ -202,6 +202,8 @@ for x in content:
 
         elif com == "AWC":  # Add With Carry
             add_hex("100000", reg(reg_a), reg(reg_b))
+        elif com == "SWC":  # Subtract With Carry
+            add_hex("100001", reg(reg_a), reg(reg_b))
         elif com == "SLC":  # Shift Left into carry
             add_hex("100100", reg(reg_a))
         elif com == "SRC":  # Shift right into carry
@@ -214,6 +216,8 @@ for x in content:
             add_hex("101000", reg(reg_a))
         elif com == "DEC":  # decrement
             add_hex("101001", reg(reg_a))
+        elif com == "SWB":  # Swap upper and lower bytes
+            add_hex("101011", reg(reg_a))
         elif com == "ELB":  # extract lower byte
             add_hex("101100", reg(reg_a))
         elif com == "EUB":  # extract upper byte
@@ -222,15 +226,6 @@ for x in content:
             add_hex("101110", reg(reg_a), reg(reg_b))
         elif com == "WUB":  # write upper byte
             add_hex("101111", reg(reg_a), reg(reg_b))
-
-        elif com == "RTX":  # Read UART
-            add_hex("110000", reg(reg_a))
-        elif com == "RDK":  # Read disk
-            add_hex("110001", reg(reg_a))
-        elif com == "WTX":  # Write UART
-            add_hex("110100", reg(reg_a))
-        elif com == "WDK":  # Write disk
-            add_hex("110101", reg(reg_a))
 
         elif com == "DEF":  # Add jump location
             add_goto(reg_a)
