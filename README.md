@@ -15,9 +15,9 @@ Processing 3
 ```
 
 Hardware
-
+[Artix-35T](http://store.digilentinc.com/arty-a7-artix-7-fpga-development-board-for-makers-and-hobbyists/) 
 ```
-A compatible Artix-35T [softcore](http://store.digilentinc.com/arty-a7-artix-7-fpga-development-board-for-makers-and-hobbyists/) processer. 
+A compatible Artix-35T softcore processer. 
 ```
 
 ### Installing
@@ -25,9 +25,13 @@ A compatible Artix-35T [softcore](http://store.digilentinc.com/arty-a7-artix-7-f
 How to get it up and going.
 
 Install prerequisit software
+
+(https://www.python.org/)
+(https://processing.org/)
+
 ```
-*[Python 2.7](https://www.python.org/)
-*[Processing 3](https://processing.org/)
+* Python 2.7
+* Processing 3
 ```
 
 Download repo
@@ -71,7 +75,7 @@ Give an example
 
 * [Python 2.7](https://www.python.org/) - compiler and assymblor
 * [Processing 3](https://processing.org/) - GUI and emulator
-*[Xlinix Vivado](https://www.xilinx.com/products/design-tools/vivado.html) - Feature development
+* [Xlinix Vivado](https://www.xilinx.com/products/design-tools/vivado.html) - Feature development
 
 
 ## Authors
