@@ -29,10 +29,10 @@ Install prerequisit software
 (https://www.python.org/)
 (https://processing.org/)
 
-```
-* Python 2.7
-* Processing 3
-```
+
+Python 2.7
+Processing 3
+
 
 Download repo
 ```
