@@ -1,10 +1,8 @@
 # MD-16G
 
-One Paragraph of project description goes here
+The MD-16G is a homebrew CPU & computer system.
 
 ## Getting Started
-
-The MD-16G is a homebrew CPU & computer system.
 
 ### Prerequisites
 Software
