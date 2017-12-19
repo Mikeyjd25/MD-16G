@@ -87,41 +87,41 @@ void draw() {
         case 3:  //03 Load half word, upper
           alu_out(data<<8);
                  break;
-        case 4:  //04 Execute ROM
+        case 4:  //04 Store
+          RAM[regr(regA)] = regr(regB);
+                 break;
+        case 5:  //05 Retrieve
+          regw(regB, RAM[regr(regA)]);
+                 break;
+        case 6:  //06 Execute ROM
           exec_ram = false;
           PROC = 0;
                  break;
-        case 5:  //05 Execute RAM
+        case 7:  //07 Execute RAM
           exec_ram = true;
           PROC = 0;
-                 break;
-        case 6:  //06 
-                 break;
-        case 7:  //07 
                  break;
         case 8:  //08 Jump
           PROC = regr(regA)-1;
                  break;
-        case 9:  //09 Jump if less than zero
-          if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC = regr(regA)-1;
+        case 9:  //09 Branch TODO
+          //if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC = regr(regA)-1;
                  break;
-        case 10: //0A Jump if greater than zero
-          if((REG[REG_ALU_FLAGS]&0x0004)>0) PROC = regr(regA)-1;
+        case 10: //0A Branch if zero TODO
+          //if((REG[REG_ALU_FLAGS]&0x0004)>0) PROC = regr(regA)-1;
                  break;
-        case 11: //0B Jump if zero
-          if((REG[REG_ALU_FLAGS]&0x0008)>0) PROC = regr(regA)-1;
+        case 11: //0B Branch if not zero TODO
+          //if((REG[REG_ALU_FLAGS]&0x0008)>0) PROC = regr(regA)-1;
                  break;
-        case 12: //0C Jump if not zero
-          if((REG[REG_ALU_FLAGS]&0x0010)>0) PROC = regr(regA)-1;
+        case 12: //0C Branch if less than zero TODO
+          //if((REG[REG_ALU_FLAGS]&0x0010)>0) PROC = regr(regA)-1;
                  break;
-        case 13: //0D Jump if carry set
-          if((REG[REG_ALU_FLAGS]&0x0001)>0) PROC = regr(regA)-1;
+        case 13: //0D Branch if greater than zero TODO
+          //if((REG[REG_ALU_FLAGS]&0x0001)>0) PROC = regr(regA)-1;
                  break;
-        case 14: //0E Store
-          RAM[regr(regA)] = regr(regB);
+        case 14: //0E Branch if carry set TODO
                  break;
-        case 15: //0F Retrieve
-          regw(regB, RAM[regr(regA)]);
+        case 15: //0F Branch if carry clear TODO
                  break;
         case 16: //10 Add
           alu_out((regr(regA)+regr(regB))&0xFFFF);
@@ -132,8 +132,7 @@ void draw() {
         case 18: //12 Multiply
           alu_out((regr(regA)*regr(regB))&0xFFFF);
                  break;
-        case 19: //13 Copy
-          regw(regB,regr(regA));
+        case 19: //13 
                  break;
         case 20: //14 Shift Left
           alu_out((regr(regA)<<1)&0xFFFF);
@@ -169,21 +168,21 @@ void draw() {
         case 31: //1F Reverse
           alu_out((Integer.reverse(regr(regA))>>16)&0xFFFF);
                  break;
-        case 32: //20 Add With Carry
+        case 32: //20 Add With Carry TODO
                  break;
-        case 33: //21 
+        case 33: //21 Subtract with carry TODO
                  break;
         case 34: //22 
                  break;
         case 35: //23 
                  break;
-        case 36: //24 Shift Left into carry
+        case 36: //24 Shift Left into carry TODO
                  break;
-        case 37: //25 Shift right into carry
+        case 37: //25 Shift right into carry TODO
                  break;
-        case 38: //26 Rotate left though carry
+        case 38: //26 Rotate left though carry TODO
                  break;
-        case 39: //27 Rotate right through carry
+        case 39: //27 Rotate right through carry TODO
                  break;
         case 40: //28 increment
           regw(regA,(regr(regA)+1)&0xFFFF);
@@ -193,28 +192,27 @@ void draw() {
                  break;
         case 42: //2A 
                  break;
-        case 43: //2B 
+        case 43: //2B Swap upper and lower byte TODO
                  break;
-        case 44: //2C extract lower byte
+        case 44: //2C extract lower byte TODO
                  break;
-        case 45: //2D extract upper byte
+        case 45: //2D extract upper byte TODO
                  break;
-        case 46: //2E write lower byte
+        case 46: //2E write lower byte TODO
                  break;
-        case 47: //2F write upper byte
+        case 47: //2F write upper byte TODO
                  break;
-        case 48: //30 Read UART
+        case 48: //30 
                  break;
-        case 49: //31 Read disk
+        case 49: //31 
                  break;
         case 50: //32 
                  break;
         case 51: //33 
                  break;
-        case 52: //34 Write UART
-          print((char) (regr(regA)&0xFF));
+        case 52: //34 
                  break;
-        case 53: //35 Write disk
+        case 53: //35 
                  break;
         case 54: //36 
                  break;
@@ -243,7 +241,7 @@ void draw() {
   }
 }
 void alu_out(int a){alu_out(a, false);}
-void alu_out(int a, boolean carry){
+void alu_out(int a, boolean carry){ //TODO Update this
   REG[REG_ALU_OUT] = a;
   int flags_temp = 0;
   if(carry) flags_temp |= 0x0001;
