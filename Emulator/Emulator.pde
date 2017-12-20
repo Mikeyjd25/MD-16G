@@ -4,39 +4,39 @@ int RAM[] = new int[65536]; //64KB of RAM
 int PROC = 0; //Program counter
 
 //---REGISTERS---
-public static final int REG_GP_0 = 0; //TODO Fix this section
+public static final int REG_GP_0 = 0;
 public static final int REG_GP_1 = 1;
 public static final int REG_GP_2 = 2;
 public static final int REG_GP_3 = 3;
-public static final int REG_GP_4 = 4;
-public static final int REG_GP_5 = 5;
-public static final int REG_GP_6 = 6;
-public static final int REG_GP_7 = 7;
-public static final int REG_ALU_OUT = 8;
-public static final int REG_ALU_FLAGS = 9;
-public static final int REG_ALU_MULT_CARRY = 10;
-public static final int REG_FLAGS = 11;
-public static final int REG_LUT_MATCH_TABLE = 12;
-public static final int REG_LUT_FIRST_MATCH = 13;
+public static final int REG_ACC = 4;
+public static final int REG_ALU_FLAGS = 5;
+public static final int REG_ALU_MULT_CARRY = 6;
+public static final int REG_IO_FLAGS = 7;
+public static final int REG_COM_0 = 8;
+public static final int REG_COM_1 = 9;
+public static final int REG_COM_2 = 10;
+public static final int REG_COM_3 = 11;
+//public static final int REG_LUT_MATCH_TABLE = 12;
+//public static final int REG_LUT_FIRST_MATCH = 13;
 public static final int REG_CURRENT_STACK_POINTER = 14;
 public static final int REG_LAST_STACK_POINTER = 15;
 
-public static final int REG_LUT_0 = 16;
-public static final int REG_LUT_1 = 17;
-public static final int REG_LUT_2 = 18;
-public static final int REG_LUT_3 = 19;
-public static final int REG_LUT_4 = 20;
-public static final int REG_LUT_5 = 21;
-public static final int REG_LUT_6 = 22;
-public static final int REG_LUT_7 = 23;
-public static final int REG_LUT_8 = 24;
-public static final int REG_LUT_9 = 25;
-public static final int REG_LUT_10 = 26;
-public static final int REG_LUT_11 = 27;
-public static final int REG_LUT_12 = 28;
-public static final int REG_LUT_13 = 29;
-public static final int REG_LUT_14 = 30;
-public static final int REG_LUT_15 = 31;
+public static final int REG_CONST_0 = 16; //TODO Fix this section
+public static final int REG_CONST_1 = 17;
+public static final int REG_CONST_2 = 18;
+public static final int REG_CONST_3 = 19;
+public static final int REG_CONST_4 = 20;
+public static final int REG_CONST_5 = 21;
+public static final int REG_CONST_6 = 22;
+public static final int REG_CONST_7 = 23;
+public static final int REG_CONST_8 = 24;
+public static final int REG_CONST_9 = 25;
+public static final int REG_CONST_10 = 26;
+public static final int REG_CONST_11 = 27;
+public static final int REG_CONST_12 = 28;
+public static final int REG_CONST_13 = 29;
+public static final int REG_CONST_14 = 30;
+public static final int REG_CONST_15 = 31;
 
 boolean exec_ram = false;
 void setup() {
@@ -247,7 +247,7 @@ void draw() {
 }
 void alu_out(int a){alu_out(a, false);}
 void alu_out(int a, boolean carry){ //TODO Update this
-  REG[REG_ALU_OUT] = a;
+  REG[REG_ACC] = a;
   int flags_temp = 0;
   if(carry) flags_temp |= 0x0001;
   if((a&0x8000)!=0) flags_temp |= 0x0002;
