@@ -1,3 +1,9 @@
+#####################################
+# First generation MD-16G Assembler #
+# Made by Mikeyjd25                 #
+# 2017                              #
+#####################################
+
 import binascii
 import time
 
@@ -16,14 +22,6 @@ def reg(reg_id):
         return "00010"
     elif reg_id == "GP3":
         return "00011"
-    elif reg_id == "ACC":
-        return "00100"
-    elif reg_id == "ALF":
-        return "00101"
-    elif reg_id == "AMC":
-        return "00110"
-    elif reg_id == "IOF":
-        return "00111"
     elif reg_id == "CM0":
         return "01000"
     elif reg_id == "CM1":
@@ -76,8 +74,8 @@ def reg(reg_id):
         raise Exception('Unrecognised register: "' + reg_id + '" [' + str(line) + ']')
 
 
-bin_count = 0
-goto_list = {}
+bin_count = 0  # Keeps track of how long program is
+goto_list = {}  # List of jump locations (Kind of)
 
 
 def add_hex(hex_d, reg_ax="00000", reg_bx="00000", data="00000000"):
