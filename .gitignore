@@ -169,3 +169,5 @@ $RECYCLE.BIN/
 # End of https://www.gitignore.io/api/emacs,windows,pycharm,notepadpp,processing
 
 *.config
+*.floo
+*.flooignore
