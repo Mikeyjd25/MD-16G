@@ -4,7 +4,7 @@ int RAM[] = new int[65536]; //64KB of RAM
 int PROC = 0; //Program counter
 
 //---REGISTERS---
-public static final int REG_GP_0 = 0;
+public static final int REG_GP_0 = 0; //TODO Fix this section
 public static final int REG_GP_1 = 1;
 public static final int REG_GP_2 = 2;
 public static final int REG_GP_3 = 3;

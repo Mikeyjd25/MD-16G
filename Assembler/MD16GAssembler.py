@@ -16,7 +16,7 @@ def reg(reg_id):
         return "00010"
     elif reg_id == "GP3":
         return "00011"
-    elif reg_id == "ALU":
+    elif reg_id == "ACC":
         return "00100"
     elif reg_id == "ALF":
         return "00101"
