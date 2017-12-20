@@ -42,7 +42,7 @@ boolean exec_ram = false;
 void setup() {
   size(1280, 960);
   // Open a file and read its binary data
-  byte b[] = loadBytes("D:/ROMs/MD/MD-16X/1.MDR");
+  byte b[] = loadBytes("D:/ROMs/MD/MD-16G/1.MDR");
   
   // Print each value, from 0 to 255
   for (int i = 0; i < b.length; i+=2) {
@@ -132,7 +132,12 @@ void draw() {
         case 18: //12 Multiply
           alu_out((regr(regA)*regr(regB))&0xFFFF);
                  break;
-        case 19: //13 
+        case 19: //13 Copy TODO add all exceptions
+          if(regA>=0 && regA<32){
+            if(regB>=0 && regB<4){
+              regw(regB,regr(regA));
+            }else if(regB==8){print((char) (regr(regA)&0xFF));}
+          }
                  break;
         case 20: //14 Shift Left
           alu_out((regr(regA)<<1)&0xFFFF);

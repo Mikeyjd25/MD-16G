@@ -32,10 +32,10 @@ def reg(reg_id):
         return "01010"
     elif reg_id == "CM3":
         return "01011"
-    elif reg_id == "":
-        return "01100"
-    elif reg_id == "":
-        return "01101"
+    # elif reg_id == "":
+    #    return "01100"
+    # elif reg_id == "":
+    #    return "01101"
     elif reg_id == "CSP":
         return "01110"
     elif reg_id == "LSP":
@@ -173,8 +173,8 @@ for x in content:
             add_hex("010001", reg(reg_a), reg(reg_b))
         elif com == "MUL":  # Multiply
             add_hex("010010", reg(reg_a), reg(reg_b))
-        # elif com == "": Un-used
-        #    add_hex("010011", reg(reg_a), reg(reg_b))
+        elif com == "CPY":  # Copy
+            add_hex("010011", reg(reg_a), reg(reg_b))
         elif com == "SHL":  # Shift Left
             add_hex("010100", reg(reg_a))
         elif com == "SHR":  # Shift Right
