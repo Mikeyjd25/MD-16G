@@ -1,6 +1,6 @@
 public static class heart{
 public  static void beat(){
-	insrt_count++;
+  insrt_count++;
   int word = 0;
   if(exec_ram) word = RAM[PROC]; else word = ROM[PROC];
   int word2 = 0;
@@ -39,7 +39,8 @@ public  static void beat(){
   case 8: //08 Jump
     PROC = emulate.regr(regA)-1;
     break;
-  case 9: //09 Branch TODO
+  case 9: //09 Branch
+    PROC += ((data&0xFF)-1);
     //if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC = emulate.regr(regA)-1;
     break;
   case 10: //0A Branch if zero TODO
@@ -67,12 +68,8 @@ public  static void beat(){
   case 18: //12 Multiply
     emulate.alu_out((emulate.regr(regA)*emulate.regr(regB))&0xFFFF);
     break;
-  case 19: //13 Copy TODO add all exceptions
-    if(regA>=0 && regA<32) {
-      if(regB>=0 && regB<4) {
-        emulate.regw(regB,emulate.regr(regA));
-      }else if(regB==8) {emulate.TerminalController((emulate.regr(regA)&0xFF));}
-    }
+  case 19: //13 Copy
+    emulate.regw(regB, emulate.regr(regA));
     break;
   case 20: //14 Shift Left
     emulate.alu_out((emulate.regr(regA)<<1)&0xFFFF);
@@ -80,9 +77,9 @@ public  static void beat(){
   case 21: //15 Shift Right
     emulate.alu_out((emulate.regr(regA)>>1)&0xFFFF);
     break;
-  case 22: //16 Rotate Left
+  case 22: //16 Rotate Left TODO
     break;
-  case 23: //17 Rotate Right
+  case 23: //17 Rotate Right TODO
     break;
   case 24: //18 AND
     emulate.alu_out((emulate.regr(regA)&emulate.regr(regB))&0xFFFF);
@@ -125,10 +122,10 @@ public  static void beat(){
   case 39: //27 Rotate right through carry TODO
     break;
   case 40: //28 increment
-    emulate.regw(regA,(emulate.regr(regA)+1)&0xFFFF);
+    emulate.regw(regA,(emulate.regr(regA)+1)&0xFFFF, true); //TODO Catch carry
     break;
   case 41: //29 decrement
-    emulate.regw(regA,(emulate.regr(regA)-1)&0xFFFF);
+    emulate.regw(regA,(emulate.regr(regA)-1)&0xFFFF, true); //TODO Catch carry
     break;
   case 42: //2A
     break;

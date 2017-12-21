@@ -22,6 +22,16 @@ void setup() {
       terminal_data[x][y] = 32;
     }
   }
+
+  //Load constants
+  REG[16] = 0x0000; //0
+  REG[17] = 0x0001; //1
+  REG[18] = 0x00FF; //255 or -128
+  REG[19] = 0xFFFF; //65535 or -32768
+  REG[20] = 0xFF00; //65280 or 32512
+  REG[21] = 0x000A; //10
+  REG[22] = 0x0064; //100
+  REG[23] = 0x0004; //4
 }
 
 
