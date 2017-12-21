@@ -104,7 +104,7 @@ def force_add_hex(hex_d):
     bin_count += 1
 
 
-def add_jump(jump_hex, use_reg, goto_id):  # TODO
+def add_jump(jump_hex, use_reg, goto_id):
     global goto_list
     if goto_id not in goto_list:
         goto_list[goto_id] = '-1'
@@ -156,20 +156,20 @@ for x in content:
             add_hex("000101")
         elif com == "JMP":  # Jump
             add_jump("001000", reg(reg_a), reg_b)
-        # elif com == "JLZ":  # Jump if less than zero
-        #    add_jump("001001", reg(reg_a), reg_b)
-        # elif com == "JGZ":  # Jump if greater than zero
-        #    add_jump("001010", reg(reg_a), reg_b)
-        # elif com == "JEZ":  # Jump if zero
-        #    add_jump("001011", reg(reg_a), reg_b) # TODO Add branching.
-        # elif com == "JNZ":  # Jump if not zero
-        #    add_jump("001100", reg(reg_a), reg_b)
-        # elif com == "JCS":  # Jump if carry set
-        #    add_jump("001101", reg(reg_a), reg_b)
-        # elif com == "STR":  # Store
-        #    add_hex("001110", reg(reg_a), reg(reg_b))
-        # elif com == "RET":  # Retrieve
-        #    add_hex("001111", reg(reg_a), reg(reg_b))
+        elif com == "BRN":  # Branch
+            add_hex("001001", data=format(int(reg_a, 16), '08b'))
+        elif com == "BEZ":  # Branch if zero
+            add_hex("001010", data=format(int(reg_a, 16), '08b'))
+        elif com == "BNZ":  # Branch if not zero
+            add_hex("001011", data=format(int(reg_a, 16), '08b'))
+        elif com == "BLZ":  # Branch if less than zero
+            add_hex("001100", data=format(int(reg_a, 16), '08b'))
+        elif com == "BGZ":  # Branch if greater than zero
+            add_hex("001101", data=format(int(reg_a, 16), '08b'))
+        elif com == "BCS":  # Branch if carry set
+            add_hex("001110", data=format(int(reg_a, 16), '08b'))
+        elif com == "BCC":  # Branch if carry clear
+            add_hex("001111", data=format(int(reg_a, 16), '08b'))
 
         elif com == "ADD":  # Add
             add_hex("010000", reg(reg_a), reg(reg_b))
