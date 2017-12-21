@@ -1,7 +1,16 @@
-int ROM[] = new int[65536]; //64KB of ROM
-int REG[] = new int[32];    //32 Registers
-int RAM[] = new int[65536]; //64KB of RAM
-int PROC = 0; //Program counter
+static int ROM[] = new int[65536]; //64KB of ROM
+static int REG[] = new int[32];    //32 Registers
+static int RAM[] = new int[65536]; //64KB of RAM
+static int PROC = 0; //Program counter
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.util.Properties;
+
+
 
 //---REGISTERS---
 public static final int REG_GP_0 = 0;
@@ -38,12 +47,23 @@ public static final int REG_CONST_13 = 29;
 public static final int REG_CONST_14 = 30;
 public static final int REG_CONST_15 = 31;
 
+
+public static String cur_path;
+
+//import ./defaults.config
+
 boolean exec_ram = false;
 void setup() {
-  size(1280, 960);
   // Open a file and read its binary data
+  cur_path = sketchPath("");
+  MakeConfig();
+
+  GetConfig();
+
+  size(640, 360);
+  surface.setSize(640*scaling,360*scaling);
   byte b[] = loadBytes("D:/ROMs/MD/MD-16G/1.MDR");
-  
+
   // Print each value, from 0 to 255
   for (int i = 0; i < b.length; i+=2) {
     // bytes are from -128 to 127, this converts to 0 to 255
@@ -51,10 +71,17 @@ void setup() {
     ROM[i/2] = a;
   }
 }
+
+
+
+
+
 int delta = 0;
 int last = 0;
 int last2 = 0;
 int insrt_count = 0;
+
+
 void draw() {
   delta = millis()-last;
   if (delta>=1000){
@@ -78,20 +105,20 @@ void draw() {
         case 0:  //00 No op
                  break;
         case 1:  //01 Load Word
-          regw(regA,word2);
+          emulate.regw(regA,word2);
           insrt_count++;
                  break;
         case 2:  //02 Load half word, lower
-          alu_out(data);
+          emulate.alu_out(data);
                  break;
         case 3:  //03 Load half word, upper
-          alu_out(data<<8);
+          emulate.alu_out(data<<8);
                  break;
         case 4:  //04 Store
-          RAM[regr(regA)] = regr(regB);
+          RAM[emulate.regr(regA)] = emulate.regr(regB);
                  break;
         case 5:  //05 Retrieve
-          regw(regB, RAM[regr(regA)]);
+          emulate.regw(regB, RAM[emulate.regr(regA)]);
                  break;
         case 6:  //06 Execute ROM
           exec_ram = false;
@@ -102,84 +129,84 @@ void draw() {
           PROC = 0;
                  break;
         case 8:  //08 Jump
-          PROC = regr(regA)-1;
+          PROC = emulate.regr(regA)-1;
                  break;
         case 9:  //09 Branch TODO
-          //if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC = regr(regA)-1;
+          //if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC = emulate.regr(regA)-1;
                  break;
         case 10: //0A Branch if zero TODO
-          //if((REG[REG_ALU_FLAGS]&0x0004)>0) PROC = regr(regA)-1;
+          //if((REG[REG_ALU_FLAGS]&0x0004)>0) PROC = emulate.regr(regA)-1;
                  break;
         case 11: //0B Branch if not zero TODO
-          //if((REG[REG_ALU_FLAGS]&0x0008)>0) PROC = regr(regA)-1;
+          //if((REG[REG_ALU_FLAGS]&0x0008)>0) PROC = emulate.regr(regA)-1;
                  break;
         case 12: //0C Branch if less than zero TODO
-          //if((REG[REG_ALU_FLAGS]&0x0010)>0) PROC = regr(regA)-1;
+          //if((REG[REG_ALU_FLAGS]&0x0010)>0) PROC = emulate.regr(regA)-1;
                  break;
         case 13: //0D Branch if greater than zero TODO
-          //if((REG[REG_ALU_FLAGS]&0x0001)>0) PROC = regr(regA)-1;
+          //if((REG[REG_ALU_FLAGS]&0x0001)>0) PROC = emulate.regr(regA)-1;
                  break;
         case 14: //0E Branch if carry set TODO
                  break;
         case 15: //0F Branch if carry clear TODO
                  break;
         case 16: //10 Add
-          alu_out((regr(regA)+regr(regB))&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)+emulate.regr(regB))&0xFFFF);
                  break;
         case 17: //11 Subtract
-          alu_out((regr(regA)-regr(regB))&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)-emulate.regr(regB))&0xFFFF);
                  break;
         case 18: //12 Multiply
-          alu_out((regr(regA)*regr(regB))&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)*emulate.regr(regB))&0xFFFF);
                  break;
         case 19: //13 Copy TODO add all exceptions
           if(regA>=0 && regA<32){
             if(regB>=0 && regB<4){
-              regw(regB,regr(regA));
-            }else if(regB==8){print((char) (regr(regA)&0xFF));}
+              emulate.regw(regB,emulate.regr(regA));
+            }else if(regB==8){print((char) (emulate.regr(regA)&0xFF));}
           }
                  break;
         case 20: //14 Shift Left
-          alu_out((regr(regA)<<1)&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)<<1)&0xFFFF);
                  break;
         case 21: //15 Shift Right
-          alu_out((regr(regA)>>1)&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)>>1)&0xFFFF);
                  break;
         case 22: //16 Rotate Left
                  break;
         case 23: //17 Rotate Right
                  break;
         case 24: //18 AND
-          alu_out((regr(regA)&regr(regB))&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)&emulate.regr(regB))&0xFFFF);
                  break;
         case 25: //19 NAND
-          alu_out((~(regr(regA)&regr(regB)))&0xFFFF);
+          emulate.alu_out((~(emulate.regr(regA)&emulate.regr(regB)))&0xFFFF);
                  break;
         case 26: //1A OR
-          alu_out((regr(regA)|regr(regB))&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)|emulate.regr(regB))&0xFFFF);
                  break;
         case 27: //1B NOR
-          alu_out((~(regr(regA)|regr(regB)))&0xFFFF);
+          emulate.alu_out((~(emulate.regr(regA)|emulate.regr(regB)))&0xFFFF);
                  break;
         case 28: //1C XOR
-          alu_out((regr(regA)^regr(regB))&0xFFFF);
+          emulate.alu_out((emulate.regr(regA)^emulate.regr(regB))&0xFFFF);
                  break;
         case 29: //1D XNOR
-          alu_out((~(regr(regA)^regr(regB)))&0xFFFF);
+          emulate.alu_out((~(emulate.regr(regA)^emulate.regr(regB)))&0xFFFF);
                  break;
         case 30: //1E NOT
-          alu_out((~regr(regA))&0xFFFF);
+          emulate.alu_out((~emulate.regr(regA))&0xFFFF);
                  break;
         case 31: //1F Reverse
-          alu_out((Integer.reverse(regr(regA))>>16)&0xFFFF);
+          emulate.alu_out((Integer.reverse(emulate.regr(regA))>>16)&0xFFFF);
                  break;
         case 32: //20 Add With Carry TODO
                  break;
         case 33: //21 Subtract with carry TODO
                  break;
-        case 34: //22 
+        case 34: //22
                  break;
-        case 35: //23 
+        case 35: //23
                  break;
         case 36: //24 Shift Left into carry TODO
                  break;
@@ -190,12 +217,12 @@ void draw() {
         case 39: //27 Rotate right through carry TODO
                  break;
         case 40: //28 increment
-          regw(regA,(regr(regA)+1)&0xFFFF);
+          emulate.regw(regA,(emulate.regr(regA)+1)&0xFFFF);
                  break;
         case 41: //29 decrement
-          regw(regA,(regr(regA)-1)&0xFFFF);
+          emulate.regw(regA,(emulate.regr(regA)-1)&0xFFFF);
                  break;
-        case 42: //2A 
+        case 42: //2A
                  break;
         case 43: //2B Swap upper and lower byte TODO
                  break;
@@ -207,37 +234,37 @@ void draw() {
                  break;
         case 47: //2F write upper byte TODO
                  break;
-        case 48: //30 
+        case 48: //30
                  break;
-        case 49: //31 
+        case 49: //31
                  break;
-        case 50: //32 
+        case 50: //32
                  break;
-        case 51: //33 
+        case 51: //33
                  break;
-        case 52: //34 
+        case 52: //34
                  break;
-        case 53: //35 
+        case 53: //35
                  break;
-        case 54: //36 
+        case 54: //36
                  break;
-        case 55: //37 
+        case 55: //37
                  break;
-        case 56: //38 
+        case 56: //38
                  break;
-        case 57: //39 
+        case 57: //39
                  break;
-        case 58: //3A 
+        case 58: //3A
                  break;
-        case 59: //3B 
+        case 59: //3B
                  break;
-        case 60: //3C 
+        case 60: //3C
                  break;
-        case 61: //3D 
+        case 61: //3D
                  break;
-        case 62: //3E 
+        case 62: //3E
                  break;
-        case 63: //3F 
+        case 63: //3F
                  break;
       }
       PROC++;
@@ -245,21 +272,112 @@ void draw() {
     }
   }
 }
-void alu_out(int a){alu_out(a, false);}
-void alu_out(int a, boolean carry){ //TODO Update this
-  REG[REG_ACC] = a;
-  int flags_temp = 0;
-  if(carry) flags_temp |= 0x0001;
-  if((a&0x8000)!=0) flags_temp |= 0x0002;
-  if((a&0x8000)==0&&a!=0) flags_temp |= 0x0004;
-  if(a==0) flags_temp |= 0x0008;
-  if(a!=0) flags_temp |= 0x0010;
-  REG[REG_ALU_FLAGS] = flags_temp;
+
+public static class emulate{
+
+  public static void alu_out(int a){alu_out(a, false);}
+  public static void alu_out(int a, boolean carry){ //TODO Update this
+    REG[REG_ACC] = a;
+    int flags_temp = 0;
+    if(carry) flags_temp |= 0x0001;
+    if((a&0x8000)!=0) flags_temp |= 0x0002;
+    if((a&0x8000)==0&&a!=0) flags_temp |= 0x0004;
+    if(a==0) flags_temp |= 0x0008;
+    if(a!=0) flags_temp |= 0x0010;
+    REG[REG_ALU_FLAGS] = flags_temp;
+  }
+  public static int regr(int a){ //TODO Fix this
+    if(a!=11) if(a>=0&&a<32)return REG[a];
+    return 0;
+  }
+  public static void regw(int a, int b){ //TODO fix this
+    if(a!=11) if(a>=0&&a<32) REG[a]=b;
+  }
+
 }
-int regr(int a){
-  if(a!=11) if(a>=0&&a<32)return REG[a];
-  return 0;
+
+public static void MakeConfig() {
+  String props_file ="defaults.properties";
+  String full_path = cur_path + props_file;
+  File file = new File(full_path);
+
+  boolean b = false;
+
+  if(!file.exists()){
+    println("The file does not exsist creating file...");
+
+    Properties prop = new Properties();
+    OutputStream output = null;
+
+    try {
+      output = new FileOutputStream(full_path);
+
+      // set the properties value
+      prop.setProperty("Rom_Location", "../TestCode/Bootloader.rom");
+      prop.setProperty("scaling", "2");
+
+      // save properties
+      prop.store(output, null);
+
+    } catch (IOException io) {
+      io.printStackTrace();
+    } finally {
+      if (output != null) {
+        try {
+          output.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
 }
-void regw(int a, int b){
-  if(a!=11) if(a>=0&&a<32) REG[a]=b;
+
+
+
+
+
+  }
+}
+
+public static String Rom_Location;
+public static int scaling = 1;
+
+
+public static void GetConfig(){
+  String props_file ="defaults.properties";
+  String full_path = cur_path + props_file;
+  File file = new File(full_path);
+
+  Properties prop = new Properties();
+  InputStream input = null;
+
+  try {
+
+    input = new FileInputStream(full_path);
+
+    // load a properties file
+    prop.load(input);
+
+    // get the property value and print it out
+    Rom_Location = prop.getProperty("Rom_Location");
+
+    try {
+    scaling = Integer.parseInt(prop.getProperty("scaling"));
+ } catch (NumberFormatException e) {
+   e.printStackTrace();
+ }
+
+
+  } catch (IOException ex) {
+    ex.printStackTrace();
+  } finally {
+    if (input != null) {
+      try {
+        input.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+
 }
