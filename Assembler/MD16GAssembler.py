@@ -6,11 +6,17 @@
 
 import binascii
 import time
+import sys
+
+
+if len(sys.argv) < 3:
+    print "Please enter two arguments. \"MD16GAssembler.py <in_file> <out_file>\""
+    sys.exit()
 
 start_time = int(round(time.time() * 1000))
 
-in_file = "D:/ROMs/MD/MD-16G/1.asm"
-out_file = "D:/ROMs/MD/MD-16G/1.MDR"
+in_file = sys.argv[1]  # "D:/ROMs/MD/MD-16G/1.asm"
+out_file = sys.argv[2]  # "D:/ROMs/MD/MD-16G/1.MDR"
 
 
 def reg(reg_id):
