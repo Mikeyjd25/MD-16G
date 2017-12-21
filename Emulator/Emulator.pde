@@ -49,8 +49,10 @@ public static final int REG_CONST_15 = 31;
 
 
 public static String cur_path;
+PImage main_font;
+public static int[][] terminal_data = new int[80][45];
 
-//import ./defaults.config
+
 
 boolean exec_ram = false;
 void setup() {
@@ -60,8 +62,9 @@ void setup() {
 
   GetConfig();
 
-  size(640, 360);
+  size(640, 360, P2D);
   surface.setSize(640*scaling,360*scaling);
+  main_font = loadImage("../Fonts/Main.png");
   byte b[] = loadBytes(Rom_Location);
 
   // Print each value, from 0 to 255
@@ -69,6 +72,12 @@ void setup() {
     // bytes are from -128 to 127, this converts to 0 to 255
     int a = ((b[i] & 0xff)<<8)|(b[i+1] & 0xff);
     ROM[i/2] = a;
+  }
+
+  for (int x = 0; x < 80; x++) {
+    for (int y = 0; y < 45; y++) {
+      terminal_data[x][y] = 32;
+    }
   }
 }
 
@@ -163,7 +172,7 @@ void draw() {
         if(regA>=0 && regA<32) {
           if(regB>=0 && regB<4) {
             emulate.regw(regB,emulate.regr(regA));
-          }else if(regB==8) {print((char) (emulate.regr(regA)&0xFF));}
+          }else if(regB==8) {emulate.TerminalController((emulate.regr(regA)&0xFF));}
         }
         break;
       case 20: //14 Shift Left
@@ -271,9 +280,51 @@ void draw() {
       PROC %= 65536;
     }
   }
+  background(242, 65, 239);
+  noStroke();
+  for (int x = 0; x < 80; x++) {
+    for (int y = 0; y < 45; y++) {
+      int tempCord = terminal_data[x][y]&0xFF;
+      int xCord = tempCord%16; //X cord
+      int yCord = (tempCord-xCord)/16; //Y cord
+      beginShape();
+      texture(main_font);
+      vertex(x*scaling*8, y*scaling*8, xCord*8, yCord*8);
+      vertex((x+1)*scaling*8, y*scaling*8, (xCord+1)*8, yCord*8);
+      vertex((x+1)*scaling*8, (y+1)*scaling*8, (xCord+1)*8, (yCord+1)*8);
+      vertex(x*scaling*8, (y+1)*scaling*8, xCord*8, (yCord+1)*8);
+      endShape();
+    }
+  }
 }
 
 public static class emulate {
+
+public static int terminal_x_pointer = 0;
+public static int terminal_y_pointer = 0;
+
+public static void TerminalController(int input) {
+  if(input>=32 && input<256) {
+    terminal_data[terminal_x_pointer][terminal_y_pointer] = input;
+    terminal_x_pointer++;
+    TerminalOverflow();
+
+  }else if(input==10){
+    terminal_x_pointer = 0;
+    terminal_y_pointer++;
+    TerminalOverflow();
+  }
+}
+
+static void TerminalOverflow() {
+  if(terminal_x_pointer>=80) {
+    terminal_x_pointer = 0;
+    terminal_y_pointer++;
+  }
+  if(terminal_y_pointer>=45) {
+    terminal_y_pointer=44;
+  }
+}
 
 public static void alu_out(int a){
   alu_out(a, false);
@@ -332,11 +383,6 @@ public static void MakeConfig() {
         }
       }
     }
-
-
-
-
-
   }
 }
 
