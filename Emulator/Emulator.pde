@@ -62,7 +62,7 @@ void setup() {
 
   size(640, 360);
   surface.setSize(640*scaling,360*scaling);
-  byte b[] = loadBytes("D:/ROMs/MD/MD-16G/1.MDR");
+  byte b[] = loadBytes(Rom_Location);
 
   // Print each value, from 0 to 255
   for (int i = 0; i < b.length; i+=2) {
