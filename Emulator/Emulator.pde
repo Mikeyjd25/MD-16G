@@ -38,12 +38,14 @@ public static final int REG_CONST_13 = 29;
 public static final int REG_CONST_14 = 30;
 public static final int REG_CONST_15 = 31;
 
+//import ./defaults.config
+
 boolean exec_ram = false;
 void setup() {
   size(1280, 960);
   // Open a file and read its binary data
   byte b[] = loadBytes("D:/ROMs/MD/MD-16G/1.MDR");
-  
+
   // Print each value, from 0 to 255
   for (int i = 0; i < b.length; i+=2) {
     // bytes are from -128 to 127, this converts to 0 to 255
@@ -177,9 +179,9 @@ void draw() {
                  break;
         case 33: //21 Subtract with carry TODO
                  break;
-        case 34: //22 
+        case 34: //22
                  break;
-        case 35: //23 
+        case 35: //23
                  break;
         case 36: //24 Shift Left into carry TODO
                  break;
@@ -195,7 +197,7 @@ void draw() {
         case 41: //29 decrement
           regw(regA,(regr(regA)-1)&0xFFFF);
                  break;
-        case 42: //2A 
+        case 42: //2A
                  break;
         case 43: //2B Swap upper and lower byte TODO
                  break;
@@ -207,37 +209,37 @@ void draw() {
                  break;
         case 47: //2F write upper byte TODO
                  break;
-        case 48: //30 
+        case 48: //30
                  break;
-        case 49: //31 
+        case 49: //31
                  break;
-        case 50: //32 
+        case 50: //32
                  break;
-        case 51: //33 
+        case 51: //33
                  break;
-        case 52: //34 
+        case 52: //34
                  break;
-        case 53: //35 
+        case 53: //35
                  break;
-        case 54: //36 
+        case 54: //36
                  break;
-        case 55: //37 
+        case 55: //37
                  break;
-        case 56: //38 
+        case 56: //38
                  break;
-        case 57: //39 
+        case 57: //39
                  break;
-        case 58: //3A 
+        case 58: //3A
                  break;
-        case 59: //3B 
+        case 59: //3B
                  break;
-        case 60: //3C 
+        case 60: //3C
                  break;
-        case 61: //3D 
+        case 61: //3D
                  break;
-        case 62: //3E 
+        case 62: //3E
                  break;
-        case 63: //3F 
+        case 63: //3F
                  break;
       }
       PROC++;
