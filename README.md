@@ -26,7 +26,7 @@ but could be tweaked to run on most FPGAs with enough block ram.
 
 How to get it up and going.
 
-Install prerequisit software
+Install prerequisite software
 
 [Python 2.7](https://www.python.org/)
 
