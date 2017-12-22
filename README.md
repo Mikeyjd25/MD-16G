@@ -65,7 +65,7 @@ A window will open and a console with text should appear.
 
 ## License
 
-All rights reserved [Mikeyjd25](https://github.com/Mikeyjd25)
+GNU General Public License v3.0
 
 ## Acknowledgments
 
