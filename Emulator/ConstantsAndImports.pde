@@ -30,7 +30,7 @@ public static final int REG_COM_3 = 11;
 public static final int REG_CURRENT_STACK_POINTER = 14;
 public static final int REG_LAST_STACK_POINTER = 15;
 
-public static final int REG_CONST_0 = 16; //TODO Fix this section
+public static final int REG_CONST_0 = 16;
 public static final int REG_CONST_1 = 17;
 public static final int REG_CONST_2 = 18;
 public static final int REG_CONST_3 = 19;
