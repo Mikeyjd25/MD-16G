@@ -37,8 +37,8 @@ public static void set_flags(int a, boolean carry){
   if(a!=0) flags_temp |= 0x0002; //Not zero
   if((a&0x8000)!=0) flags_temp |= 0x0004; //Less than zero
   if((a&0x8000)==0&&a!=0) flags_temp |= 0x0008; //Greater than zero
-  if(carry) flags_temp |= 0x0010;
-  if(!carry) flags_temp |= 0x0020;
+  if(carry) flags_temp |= 0x0010; //Carry set
+  if(!carry) flags_temp |= 0x0020; //Carry clear
   REG[REG_ALU_FLAGS] = flags_temp;
 }
 public static int regr(int a){

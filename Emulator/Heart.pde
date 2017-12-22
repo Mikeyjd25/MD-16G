@@ -41,23 +41,24 @@ public  static void beat(){
     break;
   case 9: //09 Branch
     PROC += ((data&0xFF)-1);
-    //if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC = emulate.regr(regA)-1;
     break;
-  case 10: //0A Branch if zero TODO
-    //if((REG[REG_ALU_FLAGS]&0x0004)>0) PROC = emulate.regr(regA)-1;
+  case 10: //0A Branch if zero
+    if((REG[REG_ALU_FLAGS]&0x0001)>0) PROC += ((data&0xFF)-1);
     break;
-  case 11: //0B Branch if not zero TODO
-    //if((REG[REG_ALU_FLAGS]&0x0008)>0) PROC = emulate.regr(regA)-1;
+  case 11: //0B Branch if not zero
+    if((REG[REG_ALU_FLAGS]&0x0002)>0) PROC += ((data&0xFF)-1);
     break;
-  case 12: //0C Branch if less than zero TODO
-    //if((REG[REG_ALU_FLAGS]&0x0010)>0) PROC = emulate.regr(regA)-1;
+  case 12: //0C Branch if less than zero
+    if((REG[REG_ALU_FLAGS]&0x0004)>0) PROC += ((data&0xFF)-1);
     break;
-  case 13: //0D Branch if greater than zero TODO
-    //if((REG[REG_ALU_FLAGS]&0x0001)>0) PROC = emulate.regr(regA)-1;
+  case 13: //0D Branch if greater than zero
+    if((REG[REG_ALU_FLAGS]&0x0008)>0) PROC += ((data&0xFF)-1);
     break;
-  case 14: //0E Branch if carry set TODO
+  case 14: //0E Branch if carry set
+    if((REG[REG_ALU_FLAGS]&0x0010)>0) PROC += ((data&0xFF)-1);
     break;
-  case 15: //0F Branch if carry clear TODO
+  case 15: //0F Branch if carry clear
+    if((REG[REG_ALU_FLAGS]&0x0020)>0) PROC += ((data&0xFF)-1);
     break;
   case 16: //10 Add
     emulate.alu_out((emulate.regr(regA)+emulate.regr(regB))&0xFFFF);
