@@ -28,12 +28,9 @@ How to get it up and going.
 
 Install prerequisit software
 
-(https://www.python.org/)
-(https://processing.org/)
+[Python 2.7](https://www.python.org/)
 
-
-Python 2.7
-Processing 3
+[Processing 3](https://processing.org/)
 
 
 Download repo
