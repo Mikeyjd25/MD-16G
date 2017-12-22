@@ -4,19 +4,23 @@ The MD-16G is a homebrew CPU & computer system.
 
 ## Getting Started
 
-### Prerequisites
-Software
+## Prerequisites
+#### Software
 
+To run the compiler and emulator you will need:
 ```
 Python 2.7
 Processing 3
 ```
 
-Hardware
-[Artix-35T](http://store.digilentinc.com/arty-a7-artix-7-fpga-development-board-for-makers-and-hobbyists/) 
-```
-A compatible Artix-35T softcore processer. 
-```
+#### Hardware
+
+(Please note, this is not yet implemented)
+
+To get the system running on hardware, you will need an FPGA. This project is optimised for the
+[Arty a-7  Artix-35T](http://store.digilentinc.com/arty-a7-artix-7-fpga-development-board-for-makers-and-hobbyists/)
+but could be tweaked to run on most FPGAs with enough block ram.
+
 
 ### Installing
 
@@ -37,49 +41,30 @@ Download repo
 git clone https://github.com/Mikeyjd25/MD-16G.git
 ```
 
-Run assemble
+Run Compile
 ```
-python Assembler/assemble.py
+python Compile.py
 ```
 
 Launch emulator
 ```
-Open Emulator/emulator.pde in processing
+Open Emulator/emulator.pde in processing, click run.
 ```
 
-A window will open and test will be in the window indecating the state of the system.
+A window will open and a console with text should appear.
 
-## Running the tests
-
-TODO "HelloWorld.gyb
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Built With
 
-* [Python 2.7](https://www.python.org/) - compiler and assymblor
-* [Processing 3](https://processing.org/) - GUI and emulator
-* [Xlinix Vivado](https://www.xilinx.com/products/design-tools/vivado.html) - Feature development
+* [Python 2.7](https://www.python.org/) - Compiler and Assembler
+* [Processing 3](https://processing.org/) - Emulator
+* [Xlinix Vivado](https://www.xilinx.com/products/design-tools/vivado.html) - FPGA development
 
 
 ## Authors
 
-* **Michael Duthie** - *Initial work* - [Mikeyjd25](https://github.com/Mikeyjd25)
-* **Jacob Ernst** - *So far this file* - [JacobErnst98](https://github.com/JacobErnst98)
+* **Michael Duthie** - *Lead Developer* - [Mikeyjd25](https://github.com/Mikeyjd25)
+* **Jacob Ernst** - *Odds, ends, & moral support* - [JacobErnst98](https://github.com/JacobErnst98)
 
 ## License
 
