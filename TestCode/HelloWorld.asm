@@ -2,7 +2,9 @@
 #Just a simple Hello World!#
 #By Mikeyjd25              #
 ############################
-DEF BEGIN #Loop forever
+CPY CN5 GP1
+LDW GP2 3A
+DEF LOOP
 LDW GP0 48 #H
 CPY GP0 CM0
 LDW GP0 65 #e
@@ -26,8 +28,16 @@ LDW GP0 64 #d
 CPY GP0 CM0
 LDW GP0 21 #!
 CPY GP0 CM0
-LDW GP0 0A #"Enter"
+LDW GP0 20 #' '
 CPY GP0 CM0
 
+SUB GP2 GP1
+CPY ACC CM0
 
-JMP GP0 BEGIN
+LDW GP0 0A #"Enter"
+CPY GP0 CM0
+DEC GP1
+BEZ 4
+JMP GP3 LOOP
+DEF END
+JMP GP3 END
