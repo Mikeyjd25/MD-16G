@@ -19,6 +19,14 @@ def main(in_file, out_file, enable_print=True):
             return "00010"
         elif reg_id == "GP3":
             return "00011"
+        elif reg_id == "ACC":
+            return "00100"
+        elif reg_id == "ALF":
+            return "00101"
+        elif reg_id == "AMC":
+            return "00110"
+        elif reg_id == "IOF":
+            return "00111"
         elif reg_id == "CM0":
             return "01000"
         elif reg_id == "CM1":

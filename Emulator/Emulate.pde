@@ -62,12 +62,12 @@ public static int regr(int a){
   return 0;
 }
 public static void regw(int a, int b){regw(a, b, false);}
-public static void regw(int a, int b, boolean set_flags){regw(a, b, set_flags, false);}
-public static void regw(int a, int b, boolean set_flags, boolean carry){// TODO add all exceptions
-  if(a>=0 && a<4) {
+public static void regw(int a, int b, boolean set_alu_flags){regw(a, b, set_alu_flags, false);}
+public static void regw(int a, int b, boolean set_alu_flags, boolean carry){// TODO add all exceptions
+  if(a>=0 && a<7) {
     REG[a]=b;
   }else if(a==8) {TerminalController(b&0xFF);}
-  if(set_flags){
+  if(set_alu_flags){
     set_flags(b, carry);
   }
 }
