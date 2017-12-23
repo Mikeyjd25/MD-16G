@@ -10,7 +10,7 @@ void setup() {
   size(680, 400, P2D);
   surface.setSize(680*scaling,400*scaling);
   pg = createGraphics(640, 360, P2D);
-  main_font = loadImage("../Fonts/Main.png");
+  main_font_texture = loadImage("../Fonts/Main.png");
   byte b[] = loadBytes(Rom_Location);
 
   // Print each value, from 0 to 255
@@ -24,6 +24,19 @@ void setup() {
     for (int y = 0; y < 45; y++) {
       terminal_data[x][y] = 32;
     }
+  }
+
+  for (int i = 0; i < 256; i++) {
+    int x = i%16;     //X cord
+    int y = (i-x)/16; //Y cord
+    main_font_shapes[i] = createShape();
+    main_font_shapes[i].beginShape();
+    main_font_shapes[i].texture(main_font_texture);
+    main_font_shapes[i].vertex(0, 0, x*8, y*8);
+    main_font_shapes[i].vertex(8, 0, (x+1)*8, y*8);
+    main_font_shapes[i].vertex(8, 8, (x+1)*8, (y+1)*8);
+    main_font_shapes[i].vertex(0, 8, x*8, (y+1)*8);
+    main_font_shapes[i].endShape(CLOSE);
   }
 
   //Load constants
@@ -66,16 +79,7 @@ void draw() {
   pg.background(100);
   for (int x = 0; x < 80; x++) {
     for (int y = 0; y < 45; y++) {
-      int tempCord = terminal_data[x][y]&0xFF;
-      int xCord = tempCord%16; //X cord
-      int yCord = (tempCord-xCord)/16; //Y cord
-      pg.beginShape();
-      pg.texture(main_font);
-      pg.vertex(x*8, y*8, xCord*8, yCord*8);
-      pg.vertex((x+1)*8, y*8, (xCord+1)*8, yCord*8);
-      pg.vertex((x+1)*8, (y+1)*8, (xCord+1)*8, (yCord+1)*8);
-      pg.vertex(x*8, (y+1)*8, xCord*8, (yCord+1)*8);
-      pg.endShape();
+      pg.shape(main_font_shapes[terminal_data[x][y]&0xFF], x*8, y*8);
     }
   }
   pg.endDraw();

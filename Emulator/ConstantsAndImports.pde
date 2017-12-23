@@ -49,7 +49,8 @@ public static final int REG_CONST_15 = 31;
 
 
 public static String cur_path;
-PImage main_font;
+PImage main_font_texture;
+PShape[] main_font_shapes = new PShape[256];
 public static int[][] terminal_data = new int[80][45];
 
 
