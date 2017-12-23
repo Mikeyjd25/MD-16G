@@ -16,6 +16,14 @@ public static void TerminalController(int input) {
   }
 }
 
+public static void branch(int data) {
+  if(data>=128) {
+    PROC -= (256-data)+1;
+  }else{
+    PROC += data-1;
+  }
+}
+
 static void TerminalOverflow() {
   if(terminal_x_pointer>=80) {
     terminal_x_pointer = 0;
