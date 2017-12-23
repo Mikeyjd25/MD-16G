@@ -23,6 +23,7 @@ void setup() {
   for (int x = 0; x < 80; x++) {
     for (int y = 0; y < 45; y++) {
       terminal_data[x][y] = 32;
+      terminal_data_old[x][y] = -1;
     }
   }
 
@@ -69,17 +70,19 @@ void draw() {
   }
   last2=millis();
   do {
-    for(int i = 0; i<2500000; i++) {
+    for(int i = 0; i<250000; i++) {
       heart.beat();
     }
   } while(millis()-last2<20);
   background(50);
   noStroke();
   pg.beginDraw();
-  pg.background(100);
   for (int x = 0; x < 80; x++) {
     for (int y = 0; y < 45; y++) {
-      pg.shape(main_font_shapes[terminal_data[x][y]&0xFF], x*8, y*8);
+      if(terminal_data[x][y] != terminal_data_old[x][y]) {
+        pg.shape(main_font_shapes[terminal_data[x][y]&0xFF], x*8, y*8);
+        terminal_data[x][y] = terminal_data_old[x][y];
+      }
     }
   }
   pg.endDraw();
