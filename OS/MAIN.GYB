@@ -1,0 +1,11 @@
+##########################################
+# Basic Hello World for testing compiler #
+# 2017                                   #
+##########################################
+
+int i = 0;
+while (i<10){
+    print("Hello world");
+    println(i);
+    i++;
+}

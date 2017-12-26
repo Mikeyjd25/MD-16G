@@ -173,3 +173,5 @@ $RECYCLE.BIN/
 *.flooignore
 *.rom
 *.pyc
+/temp/
+/TEMP/
