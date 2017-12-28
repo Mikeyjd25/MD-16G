@@ -4,12 +4,15 @@
 ############################################
 import time
 import sys
+import pprint
 
 NUMBER_CHARS = "0123456789"
 TEXT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_"
 ALLOWED_CHARECTERS = "!@#%^&*()[]{}+-=<>.,:;|'\"\\/? "+NUMBER_CHARS+TEXT_CHARS
+pp = pprint.PrettyPrinter(indent=4)
 
 def main(in_file, out_file):
+    """Take in a file, compile it, and output a file."""
     start_time = int(round(time.time() * 1000))  # START
 
 
@@ -18,18 +21,22 @@ def main(in_file, out_file):
     with open(in_file) as f:
         content = f.readlines()
     content = [x.strip() for x in content]
-    print("Starting stage 1...")
 
+    print("Starting stage 1...")
     stage_1 = clean_strings(content)
+
+    print("Starting stage 2...")
     stage_2 = lexical_analyser(stage_1)
 
-    print(stage_2)
+    pp.pprint(stage_2)
 
     end_time = int(round(time.time() * 1000))  # END
     print("Compilation Took: " + str(end_time-start_time) + "ms")
 
 
 def clean_strings(s):
+    """Take array of strings, remove comments, replace all whitespace
+    with 'space', remove excess whitespace."""
     out = [" "]
     for each in s:
         x = each.strip()+' '
@@ -38,17 +45,33 @@ def clean_strings(s):
                 if(x[i]=="#" and out[-1]!="\\"):
                     break
                 out.append(x[i])
-#        if(len(x)>0):
-#            out.append(x)
     return ' '.join(''.join(out).split())
 
 
-def lexical_analyser(s):
-    lex = ""
+def lexical_analyser(s):  # !@#%^&*()[]{}+-=<>.,:;|'\"\\/? 
+    lex = Lexeme()
     out = []
-    for i in range(0,len(s)):
-        lex += s[i]
-    return s
+    for i, char in enumerate(s):
+        if((char in TEXT_CHARS) or (lex.text_len() > 0 and char in NUMBER_CHARS and lex.lex_type == "text")):
+            lex.append_text(char)
+            lex.set_type("text")
+        else:
+            if(lex.text_len()>0 and lex.lex_type == "text"):
+                out.append(lex.output())
+            elif((char in NUMBER_CHARS) or (lex.text_len()>0 and lex.lex_type == "number")):
+                lex.append_text(char)
+                lex.set_type("number")
+            elif(char in TEXT_CHARS or char in NUMBER_CHARS):  # If number or text something went wrong
+                raise Exception("Something went wrong (CODE-1)")
+            elif(lex.text_len()):  # Len > 0 catch error
+                raise Exception("Something went wrong (CODE-2)")
+            else: # Must be a thing if it is not a something
+                if(char in ALLOWED_CHARECTERS):
+                    lex.set_type("special")
+                    lex.append_text(char)
+                    out.append(lex.output())
+            
+    return out
 
 
 if __name__ == "__main__":
@@ -57,3 +80,25 @@ if __name__ == "__main__":
         sys.exit()
     else:
         main(sys.argv[1], sys.argv[2])
+
+
+class Lexeme:
+    def __init__(self, l_type="", l_text=""):
+        self.lex_type = l_type
+        self.lex_text = l_text
+
+    def text_len(self):
+        """Return length of lex text"""
+        return len(self.lex_text)
+
+    def append_text(self,char):
+        self.lex_text += char
+    
+    def set_type(self, l_type):
+        self.lex_type = l_type
+    
+    def output(self):
+        out_dict = {"type": self.lex_type, "text": self.lex_text}
+        self.lex_type = ""
+        self.lex_text = ""
+        return out_dict
