@@ -49,7 +49,7 @@ def clean_strings(s):
     return ' '.join(''.join(out).split())
 
 
-def lexical_analyser(s):  # !@#%^&*()[]{}+-=<>.,:;|'\"\\/? 
+def lexical_analyser(s):
     lex = Lexeme()
     out = []
     for i, char in enumerate(s):
@@ -109,4 +109,49 @@ class Lexeme:
 
 
 def more_lex(s):
-    return s
+    out = []
+    for item in s:
+        if(len(item['text']) == 0):
+            print("WARNING: Something went wrong (CODE-3)")
+            continue
+        if(item['type'] == "text"):
+            out.append({"type": "text", "value": item['text']})
+            continue
+        if(item['type'] == "number"):
+            out.append({"type": "number", "value": int(item['text'])})
+            continue
+        if(item['type'] == "symbol"):
+            if(item['text'] in '+-%*/^'):
+                out.append({"type": "arithmetic", "value": item['text']})
+                continue
+            if(item['text'] in ',;.'):
+                out.append({"type": "punctuation", "value": item['text']})
+                continue
+            if(item['text'] in '='):
+                out.append({"type": "assignment", "value": item['text']})
+                continue
+            if(item['text'] in '@'):
+                out.append({"type": "pointer", "value": item['text']})
+                continue
+            if(item['text'] in '<>'):
+                out.append({"type": "comparison", "value": item['text']})
+                continue
+            if(item['text'] in '\'"'):
+                out.append({"type": "quotation", "value": item['text']})
+                continue
+            if(item['text'] in '!|&'):
+                out.append({"type": "logical", "value": item['text']})
+                continue
+            if(item['text'] in '{[]()}'):
+                out.append({"type": "bracket", "value": item['text']})
+                continue
+            if(item['text'] in '\\'):
+                out.append({"type": "escape", "value": item['text']})
+                continue
+            if(item['text'] in ' '):
+                out.append({"type": "whitespace", "value": item['text']})
+                continue
+            if(item['text'] in '#?'):
+                out.append({"type": "misc", "value": item['text']})
+                continue
+    return out
