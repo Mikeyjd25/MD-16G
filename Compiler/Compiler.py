@@ -28,8 +28,9 @@ def main(in_file, out_file):
     print("Starting stage 2...")
     stage_2 = lexical_analyser(stage_1)
     stage_2_1 = more_lex(stage_2)
+    stage_2_2 = lex_3(stage_2_1)
 
-    pp.pprint(stage_2_1)
+    pp.pprint(stage_2_2)
 
     end_time = int(round(time.time() * 1000))  # END
     print("Compilation Took: " + str(end_time-start_time) + "ms")
@@ -121,7 +122,7 @@ def more_lex(s):
             out.append({"type": "number", "value": int(item['text'])})
             continue
         if(item['type'] == "symbol"):
-            if(item['text'] in '+-%*/^'):
+            if(item['text'] in '+-%*/'):
                 out.append({"type": "arithmetic", "value": item['text']})
                 continue
             if(item['text'] in ',;.'):
@@ -151,7 +152,57 @@ def more_lex(s):
             if(item['text'] in ' '):
                 out.append({"type": "whitespace", "value": item['text']})
                 continue
-            if(item['text'] in '#?'):
+            if(item['text'] in '#?^:'):
                 out.append({"type": "misc", "value": item['text']})
                 continue
+    return out
+
+def lex_3(s):
+    escape = False
+    skip = False
+    out = []
+    for i, lex in enumerate(s):
+        if escape:
+            escape = False
+            out.append({'type': 'text', 'value': str(lex['value'])})
+            continue
+        if skip:
+            skip = False
+            continue
+        if lex['type'] == 'escape':
+            escape = True
+            continue
+        if lex['type'] == 'arithmetic':
+            if lex['value'] in "+-*/":
+                if s[i+1]['type'] == 'assignment':
+                    skip = True
+                    out.append({'type': 'special_assignment', 'value': lex['value'] + s[i+1]['value']})
+                    continue
+            if lex['value'] in '+-':
+                if s[i+1]['type'] == 'arithmetic':
+                    if lex['value'] == s[i+1]['value']:
+                        if lex['value'] == '+':
+                            skip = True
+                            out.append({'type': 'increment', 'value': lex['value'] + s[i+1]['value']})
+                            continue
+                        if lex['value'] == '-':
+                            skip = True
+                            out.append({'type': 'decrement', 'value': lex['value'] + s[i+1]['value']})
+                            continue
+        if lex['type'] == 'comparison':
+            if s[i+1]['type'] == 'assignment':
+                skip = True
+                out.append({'type': 'comparison', 'value': lex['value'] + s[i+1]['value']})
+                continue
+            if s[i+1]['type'] == 'comparison':
+                if s[i+2]['type'] == 'comparison':
+                    if lex['value'] == s[i+1]['value']:
+                        skip = True
+                        out.append({'type': 'shift', 'value': lex['value'] + s[i+1]['value'] + s[i+2]['value']})
+                        continue
+                if lex['value'] == s[i+1]['value'] == s[i+2]['value']:
+                    skip = True
+                    out.append({'type': 'shift', 'value': lex['value'] + s[i+1]['value']})
+                    continue
+        out.append(lex)
     return out
