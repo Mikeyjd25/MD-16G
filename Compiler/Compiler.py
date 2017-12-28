@@ -27,8 +27,9 @@ def main(in_file, out_file):
 
     print("Starting stage 2...")
     stage_2 = lexical_analyser(stage_1)
+    stage_2_1 = more_lex(stage_2)
 
-    pp.pprint(stage_2)
+    pp.pprint(stage_2_1)
 
     end_time = int(round(time.time() * 1000))  # END
     print("Compilation Took: " + str(end_time-start_time) + "ms")
@@ -52,24 +53,27 @@ def lexical_analyser(s):  # !@#%^&*()[]{}+-=<>.,:;|'\"\\/?
     lex = Lexeme()
     out = []
     for i, char in enumerate(s):
-        if((char in TEXT_CHARS) or (lex.text_len() > 0 and char in NUMBER_CHARS and lex.lex_type == "text")):
+        if((char in TEXT_CHARS and (lex.lex_type == "" or lex.lex_type == "text")) or (lex.text_len() > 0 and char in NUMBER_CHARS and lex.lex_type == "text")):
             lex.append_text(char)
             lex.set_type("text")
-        else:
-            if(lex.text_len()>0 and lex.lex_type == "text"):
-                out.append(lex.output())
-            elif((char in NUMBER_CHARS) or (lex.text_len()>0 and lex.lex_type == "number")):
-                lex.append_text(char)
-                lex.set_type("number")
-            elif(char in TEXT_CHARS or char in NUMBER_CHARS):  # If number or text something went wrong
-                raise Exception("Something went wrong (CODE-1)")
-            elif(lex.text_len()):  # Len > 0 catch error
-                raise Exception("Something went wrong (CODE-2)")
-            else: # Must be a thing if it is not a something
-                if(char in ALLOWED_CHARECTERS):
-                    lex.set_type("special")
-                    lex.append_text(char)
-                    out.append(lex.output())
+            continue
+        if(lex.text_len()>0 and lex.lex_type == "text"):
+            out.append(lex.output())
+        if(char in NUMBER_CHARS and (lex.lex_type == "" or lex.lex_type == "number")):
+            lex.append_text(char)
+            lex.set_type("number")
+            continue
+        if(lex.lex_type == "number" and lex.text_len > 0):
+            out.append(lex.output())
+        if(char in TEXT_CHARS or char in NUMBER_CHARS):  # If number or text something went wrong
+            raise Exception("Something went wrong (CODE-1)")
+        if(lex.text_len()):  # Len > 0 catch error
+            raise Exception("Something went wrong (CODE-2)")
+        if(char in ALLOWED_CHARECTERS):
+            lex.set_type("symbol")
+            lex.append_text(char)
+            out.append(lex.output())
+            continue
             
     return out
 
@@ -102,3 +106,7 @@ class Lexeme:
         self.lex_type = ""
         self.lex_text = ""
         return out_dict
+
+
+def more_lex(s):
+    return s
