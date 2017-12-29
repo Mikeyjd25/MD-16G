@@ -30,7 +30,10 @@ def main(in_file, out_file):
     stage_2_1 = more_lex(stage_2)
     stage_2_2 = lex_3(stage_2_1)
 
-    pp.pprint(stage_2_2)
+    print("Starting stage 3...")
+    stage_3 = syntactic_analyser(stage_2_2)
+
+    pp.pprint(stage_3)
 
     end_time = int(round(time.time() * 1000))  # END
     print("Compilation Took: " + str(end_time-start_time) + "ms")
@@ -157,6 +160,8 @@ def more_lex(s):
                 continue
     return out
 
+KEYWORDS = ['int', 'short', 'long', 'byte', 'boolean', 'void', 'for', 'while', 'def']
+
 def lex_3(s):
     escape = False
     skip = False
@@ -204,5 +209,40 @@ def lex_3(s):
                     skip = True
                     out.append({'type': 'shift', 'value': lex['value'] + s[i+1]['value']})
                     continue
+        if lex['type'] == 'text':
+            if lex['value'] in KEYWORDS:
+                out.append({'type': 'keyword', 'value': lex['value']})
+                continue
+        if lex['type'] == 'punctuation':
+            if lex['value'] in ';':
+                out.append({'type': 'semicolon', 'value': lex['value']})
+                continue
         out.append(lex)
     return out
+
+def syntactic_analyser(s):
+    in_string = False
+    string_type = ""
+    string_value = ""
+    depth = 0
+    s1 = []
+    for i, lex in enumerate(s):
+        if lex['type'] == 'quotation':
+            if in_string:
+                if lex['value'] == string_type:
+                    in_string = False
+                    s1.append({'type': 'string', 'value': string_value})
+                    string_value = ""
+                    continue
+                string_value += lex['value']
+            else:
+                in_string = True
+                string_type = lex['value']
+                continue
+        if in_string:
+            string_value += lex['value']
+            continue
+        if lex['type'] == 'whitespace':
+            continue
+        s1.append(lex)
+    return s1

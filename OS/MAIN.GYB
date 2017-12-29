@@ -3,9 +3,9 @@
 # 2017                                   #
 ##########################################
 
-int i = 0;
+short i = 0;
 while (i<10){
-    print("Hello world");
+    print("Hello world!");
     println(i);
     i++;
 }
