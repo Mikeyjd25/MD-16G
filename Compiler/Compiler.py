@@ -160,7 +160,9 @@ def more_lex(s):
                 continue
     return out
 
-KEYWORDS = ['int', 'short', 'long', 'byte', 'boolean', 'void', 'for', 'while', 'def']
+KEYWORDS = {'int': 'data_type', 'short': 'data_type', 'long': 'data_type', 'byte': 'data_type',
+            'boolean': 'data_type', 'void': 'data_type', 'for': 'loop', 'while': 'loop',
+            'def': 'function'}
 
 def lex_3(s):
     escape = False
