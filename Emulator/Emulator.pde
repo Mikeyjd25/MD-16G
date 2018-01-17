@@ -45,7 +45,7 @@ void setup() {
   REG[17] = 0x0001; //1
   REG[18] = 0x00FF; //255 or -128
   REG[19] = 0xFFFF; //65535 or -32768
-  REG[20] = 0xFF00; //65280 or 32512
+  REG[20] = 0xFF00; //65280 or -32512
   REG[21] = 0x000A; //10
   REG[22] = 0x0064; //100
   REG[23] = 0x0004; //4
@@ -62,18 +62,20 @@ static int insrt_count = 0;
 void draw() {
   delta = millis()-last;
   if (delta>=1000) {
-    surface.setTitle("PROC: " + Integer.toString(insrt_count/delta/1000) + "MHz, " +
+    surface.setTitle("PROC: " + Integer.toString(insrt_count/delta/1000) + "MIPS, " +
     Integer.toString(((frameCount-last_framecount)*1000)/delta) + "FPS");
     last_framecount = frameCount;
     insrt_count = 0;
     last = millis();
   }
   last2=millis();
+  int current_loops = 0;
   do {
     for(int i = 0; i<250000; i++) {
       heart.beat();
     }
-  } while(millis()-last2<20);
+    current_loops++;
+  } while((millis()-last2<20)&&(current_loops<8));
   background(50);
   noStroke();
   pg.beginDraw();

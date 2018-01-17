@@ -51,7 +51,7 @@ public static void set_flags(int a, boolean carry){
 }
 public static int regr(int a){
   if(a>=0&&a<32){
-    if(a>=0&&a<7){
+    if((a>=0 && a<7)||(a==14||a==15)){
       return REG[a];
     }
     //TODO Implement coms handling
@@ -64,7 +64,7 @@ public static int regr(int a){
 public static void regw(int a, int b){regw(a, b, false);}
 public static void regw(int a, int b, boolean set_alu_flags){regw(a, b, set_alu_flags, false);}
 public static void regw(int a, int b, boolean set_alu_flags, boolean carry){// TODO add all exceptions
-  if(a>=0 && a<7) {
+  if((a>=0 && a<7)||(a==14||a==15)) {
     REG[a]=b;
   }else if(a==8) {TerminalController(b&0xFF);}
   if(set_alu_flags){

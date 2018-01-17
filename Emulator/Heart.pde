@@ -14,7 +14,7 @@ public  static void beat(){
     break;
   case 1: //01 Load Word
     emulate.regw(regA,word2);
-    insrt_count++;
+    PROC++;
     break;
   case 2: //02 Load half word, lower
     emulate.alu_out(data);
