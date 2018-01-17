@@ -138,9 +138,9 @@ def main(in_file, out_file, enable_print=True):
             elif com == "LDU":  # Load half word, upper
                 add_hex("000011", data=format(int(reg_a, 16), '08b'))
             elif com == "STR":  # Store
-                add_hex("000100")
+                add_hex("000100", reg(reg_a), reg(reg_b))
             elif com == "RET":  # Retrieve
-                add_hex("000101")
+                add_hex("000101", reg(reg_a), reg(reg_b))
             elif com == "JMP":  # Jump
                 add_jump("001000", reg(reg_a), reg_b)
             elif com == "BRN":  # Branch
