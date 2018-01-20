@@ -8,16 +8,14 @@ import pprint
 
 NUMBER_CHARS = "0123456789"
 TEXT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_"
-ALLOWED_CHARECTERS = "!@#%^&*()[]{}+-=<>.,:;|'\"\\/? "+NUMBER_CHARS+TEXT_CHARS
-pp = pprint.PrettyPrinter(indent=4)
+ALLOWED_CHARECTERS = "!@#%^&*{()[]}+-=<>.,:;|'\"\\/? "+NUMBER_CHARS+TEXT_CHARS
+pp = pprint.PrettyPrinter(indent=2)
 
 def main(in_file, out_file):
     """Take in a file, compile it, and output a file."""
     start_time = int(round(time.time() * 1000))  # START
 
-
-    print("Wait, you want ME to do WORK?", in_file, out_file)
-    print("Okay, fine. Compiling...")
+    print("Compiling ['"+in_file+"' --> '"+out_file+"'].")
     with open(in_file) as f:
         content = f.readlines()
     content = [x.strip() for x in content]
@@ -33,7 +31,11 @@ def main(in_file, out_file):
     print("Starting stage 3...")
     stage_3 = syntactic_analyser(stage_2_2)
 
-    pp.pprint(stage_3)
+    stage_3.append({'type': 'bracket', 'value': 'eof'})
+
+    stage_4 = tree_maker(stage_3, 0)
+
+    pp.pprint(stage_4)
 
     end_time = int(round(time.time() * 1000))  # END
     print("Compilation Took: " + str(end_time-start_time) + "ms")
@@ -160,9 +162,9 @@ def more_lex(s):
                 continue
     return out
 
-KEYWORDS = {'int': 'data_type', 'short': 'data_type', 'long': 'data_type', 'byte': 'data_type',
+KEYWORDS = {'int8': 'data_type', 'int16': 'data_type', 'int32': 'data_type', 'int64': 'data_type',
             'boolean': 'data_type', 'void': 'data_type', 'for': 'loop', 'while': 'loop',
-            'def': 'function'}
+            'def': 'function', 'IO_TXT': 'io'}
 
 def lex_3(s):
     escape = False
@@ -201,6 +203,11 @@ def lex_3(s):
                 skip = True
                 out.append({'type': 'comparison', 'value': lex['value'] + s[i+1]['value']})
                 continue
+            if s[i+1]['type'] == 'arithmetic':
+                if s[i+1]['value'] == '-':
+                    skip = True
+                    out.append({'type': 'io', 'value': lex['value'] + s[i+1]['value']})
+                    continue
             if s[i+1]['type'] == 'comparison':
                 if s[i+2]['type'] == 'comparison':
                     if lex['value'] == s[i+1]['value']:
@@ -221,6 +228,8 @@ def lex_3(s):
                 continue
         out.append(lex)
     return out
+
+custom_keywords = {}
 
 def syntactic_analyser(s):
     in_string = False
@@ -247,4 +256,52 @@ def syntactic_analyser(s):
         if lex['type'] == 'whitespace':
             continue
         s1.append(lex)
-    return s1
+    s2 = []
+    i = -1
+    while i < len(s1)-1:
+        i += 1
+        if s1[i]['type'] == 'keyword':
+            if KEYWORDS[s1[i]['value']] == 'data_type':  # raise Exception("Something went wrong (CODE-1)")
+                pass
+        s2.append(s1[i])
+    return s2
+
+
+def tree_maker(s, scan_type):
+    look_for = ""
+    data = s
+    if scan_type == 0:
+        look_for = "eof"
+    elif scan_type == 1:
+        look_for = "}"
+    elif scan_type == 2:
+        look_for = "]"
+    elif scan_type == 3:
+        look_for = ")"
+    output = [[],[]]
+    i = 0
+    while True:
+        if data[i]["type"] == "bracket":
+            if data[i]["value"] == look_for:
+                output[1] = data[(i+1):]
+                if scan_type == 0:
+                    return output[0]
+                return output
+            elif data[i]["value"] in "]})":
+                raise Exception("Something went wrong. Unexpected '" + data[i]["value"] + "'.")
+            else:
+                tmp = []
+                if data[i]["value"] == "{":
+                    tmp = tree_maker(data[(i+1):], 1)
+                elif data[i]["value"] == "[":
+                    tmp = tree_maker(data[(i+1):], 2)
+                elif data[i]["value"] == "(":
+                    tmp = tree_maker(data[(i+1):], 3)
+                else:
+                    raise Exception("Something went wrong. Unknown bracket '" + data[i]["value"] + "'.")
+                output[0].append({"type": "block", "value": tmp[0], "block_type": data[i]["value"]})
+                data = tmp[1]
+                i = -1
+        else:
+            output[0].append(data[i])
+        i += 1
