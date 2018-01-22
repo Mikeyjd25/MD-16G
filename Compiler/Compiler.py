@@ -11,6 +11,9 @@ TEXT_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_"
 ALLOWED_CHARECTERS = "!@#%^&*{()[]}+-=<>.,:;|'\"\\/? "+NUMBER_CHARS+TEXT_CHARS
 pp = pprint.PrettyPrinter(indent=2)
 
+funcs = {}
+gvars = {}
+
 def main(in_file, out_file):
     """Take in a file, compile it, and output a file."""
     start_time = int(round(time.time() * 1000))  # START
@@ -35,7 +38,10 @@ def main(in_file, out_file):
 
     stage_4 = tree_maker(stage_3, 0)
 
-    pp.pprint(stage_4)
+    functionator(stage_4)
+
+    pp.pprint(funcs)
+    pp.pprint(gvars)
 
     end_time = int(round(time.time() * 1000))  # END
     print("Compilation Took: " + str(end_time-start_time) + "ms")
@@ -163,8 +169,7 @@ def more_lex(s):
     return out
 
 KEYWORDS = {'int8': 'data_type', 'int16': 'data_type', 'int32': 'data_type', 'int64': 'data_type',
-            'boolean': 'data_type', 'void': 'data_type', 'for': 'loop', 'while': 'loop',
-            'def': 'function', 'IO_TXT': 'io'}
+            'boolean': 'data_type', 'void': 'data_type', 'for': 'loop', 'while': 'loop', 'IO_TXT': 'io'}
 
 def lex_3(s):
     escape = False
@@ -305,3 +310,46 @@ def tree_maker(s, scan_type):
         else:
             output[0].append(data[i])
         i += 1
+
+def functionator(s):
+    i = 0
+    while i<len(s):
+        if s[i]["type"] == "keyword":
+            if s[i+1]["type"] == "text":
+                if s[i+2]["type"] == "block" and s[i+2]["block_type"] == "(":
+                    if s[i+3]["type"] == "block" and s[i+3]["block_type"] == "{":
+                        func_title, func_body = generate_function(s[i+0]["value"], s[i+1]["value"], s[i+2], s[i+3])
+                        if s[i+1]["value"] in funcs:
+                            raise Exception("Functionator failed. Tried to redefine function.")
+                        funcs[func_title] = func_body
+                        i += 4
+                        continue
+                if s[i+2]["type"] == "semicolon":  # TODO
+                    if s[i+1]["value"] in gvars:
+                        raise Exception("Functionator failed. Tried to redefine global variable.")
+                    i += 3
+                    continue
+                if s[i+2]["type"] == "assignment":  # TODO
+                    if s[i+3]["type"] in ["number", "block"]:
+                        if s[i+4]["type"] == "semicolon":
+                            if s[i+1]["value"] in gvars:
+                                raise Exception("Functionator failed. Tried to redefine global variable.")
+                            i += 5
+                            continue
+        raise Exception("Functionator failed.", i)
+
+def generate_function(data_type, name, input_block, body_block):
+    state = 0
+    in_array = []
+    for var in input_block["value"]:  # TODO this.
+        if state == 0:
+            if var["type"] == "keyword":
+                pass
+            else:
+                raise Exception("generate_function failed.")
+    func_title = name  # TODO this.
+    return func_title, {"title": name, "body": body_block["value"], "inputs": in_array, "returns": data_type}
+
+def math_block_parser(math_block):
+    # TODO
+    return 0
