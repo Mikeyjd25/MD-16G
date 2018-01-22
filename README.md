@@ -61,7 +61,7 @@ A window will open and a console with text should appear.
 ## Authors
 
 * **Michael Duthie** - *Lead Developer* - [Mikeyjd25](https://github.com/Mikeyjd25)
-* **Jacob Ernst** - *Odds, ends, & moral support* - [JacobErnst98](https://github.com/JacobErnst98)
+* **Jacob Ernst** - *Odds, ends, [Rubber Ducky](https://en.wikipedia.org/wiki/Rubber_duck_debugging), & moral support* - [JacobErnst98](https://github.com/JacobErnst98)
 
 ## License
 
