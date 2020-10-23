@@ -8,6 +8,7 @@ void setup() {
   GetConfig();
 
   size(680, 400, P2D);
+  noSmooth();
   surface.setSize(680*scaling,400*scaling);
   pg = createGraphics(640, 360, P2D);
   main_font_texture = loadImage("../Fonts/Main.png");
@@ -45,10 +46,11 @@ void setup() {
   REG[17] = 0x0001; //1
   REG[18] = 0x00FF; //255 or -128
   REG[19] = 0xFFFF; //65535 or -32768
-  REG[20] = 0xFF00; //65280 or 32512
+  REG[20] = 0xFF00; //65280 or -32512
   REG[21] = 0x000A; //10
   REG[22] = 0x0064; //100
   REG[23] = 0x0004; //4
+  background(50);
 }
 
 
@@ -62,26 +64,27 @@ static int insrt_count = 0;
 void draw() {
   delta = millis()-last;
   if (delta>=1000) {
-    surface.setTitle("PROC: " + Integer.toString(insrt_count/delta/1000) + "MHz, " +
+    surface.setTitle("PROC: " + Integer.toString(insrt_count/delta/1000) + "MIPS, " +
     Integer.toString(((frameCount-last_framecount)*1000)/delta) + "FPS");
     last_framecount = frameCount;
     insrt_count = 0;
     last = millis();
   }
   last2=millis();
+  int current_loops = 0;
   do {
     for(int i = 0; i<250000; i++) {
       heart.beat();
     }
-  } while(millis()-last2<20);
-  background(50);
+    current_loops++;
+  } while((millis()-last2<20)&&(current_loops<8));
   noStroke();
   pg.beginDraw();
   for (int x = 0; x < 80; x++) {
     for (int y = 0; y < 45; y++) {
       if(terminal_data[x][y] != terminal_data_old[x][y]) {
         pg.shape(main_font_shapes[terminal_data[x][y]&0xFF], x*8, y*8);
-        terminal_data[x][y] = terminal_data_old[x][y];
+        terminal_data_old[x][y] = terminal_data[x][y];
       }
     }
   }
